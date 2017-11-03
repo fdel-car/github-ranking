@@ -80,13 +80,8 @@ function launchQuery(self, query) {
             obj.stars = results.data.items[index][item];
             else if (item == 'forks_count' && results.data.items[index].hasOwnProperty(item))
             obj.forks = results.data.items[index][item];
-            else if (item == 'events_url' && results.data.items[index].hasOwnProperty(item)) {
-              // var events = results.data.items[index][item];
-              // console.log(events);
-              // setInterval(function() {console.log(results.data.items[index][item]);}, 1000);
-
-              obj.events_url = results.data.items[index][item];
-            }
+            else if (item == 'events_url' && results.data.items[index].hasOwnProperty(item))
+            obj.events_url = results.data.items[index][item];
           }
           obj.etag = null;
           data.push(obj);
