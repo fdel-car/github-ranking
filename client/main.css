@@ -1,0 +1,16 @@
+/* CSS declarations go here */
+
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.list-group-item {
+    color: black;
+}
+
+.list-group-item:hover {
+    color: black;
+    background-color: whitesmoke;
+}
