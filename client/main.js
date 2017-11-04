@@ -100,7 +100,7 @@ function launchQuery(self, query) {
         }
         self.repositories.set(data);
         registerEvent(data, self);
-        setInterval(function() {registerEvent(data, self);}, 20000);
+        setInterval(function() {registerEvent(data, self);}, 7200);
       }
     }
   });
