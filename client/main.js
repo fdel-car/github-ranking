@@ -42,7 +42,7 @@ function registerEvent(obj, self)
         } else if (results.response.statusCode == 304) {
           console.log("Nothing to update.");
         }  else {
-          console.log("Must update.");
+          console.log("Must update " + obj[results.index].name + '.' + results.response.data.type);
           obj[results.index].etag = results.response.headers.etag;
           Meteor.call("getQuery", "https://api.github.com/repositories/" + obj[results.index].id, function(error, result) {
             if (error) {
@@ -65,7 +65,7 @@ function launchQuery(self, query) {
   Meteor.call("getQuery", query, function(error, results) {
     if (error) {
       if (error != null && error != false)
-      self.repositories.set([{name: error.reason}]);
+      self.repositories.set([{name: error.reason, created_at: 'few seconds', description: 'If only MongoDB was used... nah don\'t need it.', stars: 'Stars', forks: 'Forks'}]);
     }
     else {
       var data = [];
@@ -99,8 +99,8 @@ function launchQuery(self, query) {
           data.push(obj);
         }
         self.repositories.set(data);
-        // registerEvent(data, self);
-        // setInterval(function() {registerEvent(data, self);}, 10000);
+        registerEvent(data, self);
+        setInterval(function() {registerEvent(data, self);}, 20000);
       }
     }
   });
@@ -108,7 +108,7 @@ function launchQuery(self, query) {
 
 Template.body.onCreated(function bodyOnCreated(){
   var self = this;
-  self.repositories = new ReactiveVar([{ name: 'Waiting for the server response...'}]);
+  self.repositories = new ReactiveVar([{ name: 'Waiting for the server response...', created_at: 'few seconds', description: 'Should be here any seconds now !', stars: 'Stars', forks: 'Forks'}]);
   if (Meteor.isClient) {
     launchQuery(self, "https://api.github.com/search/repositories?q=stars%3A%3E1+nodejs&sort=stars&order=desc&per_page=10&page=0");
   }
