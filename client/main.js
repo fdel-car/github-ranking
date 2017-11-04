@@ -42,7 +42,7 @@ function registerEvent(obj, self)
         } else if (results.response.statusCode == 304) {
           console.log("Nothing to update.");
         }  else {
-          console.log("Must update " + obj[results.index].name + '.' + results.response.data.type);
+          console.log("Must update " + obj[results.index].name + '. ' + results.response.data[0].type);
           obj[results.index].etag = results.response.headers.etag;
           Meteor.call("getQuery", "https://api.github.com/repositories/" + obj[results.index].id, function(error, result) {
             if (error) {
