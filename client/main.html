@@ -1,5 +1,5 @@
 <head>
-  <title>app-test</title>
+  <title>Github repositories ranking</title>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="https://use.fontawesome.com/77f1e7b12c.js"></script>
   <link rel="icon" sizes="16x16 32x32" href="/favicon.ico">
@@ -7,13 +7,15 @@
 </head>
 
 <body>
-  <div class="container">
-    <div class="list-group">
+
+<div id="flex" class="container">
+    <div class="list-group w-100">
+      <h1 id="title">Github repo ranking -> Node.js</h1>
       {{#each repositories}}
       {{> most_liked}}
       {{/each}}
     </div>
-  </div>
+</div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 </body>
@@ -25,7 +27,7 @@
       <!-- <span class="badge badge-success badge-pill">{{stars}}</span> -->
       <span class="badge badge-light"><i class="fa fa-star" aria-hidden="true"></i> {{stars}}</span>
     </div>
-    <p class="mb-1">
+    <p class="mb-1 description">
       {{#emoji}}
       {{description}}
       {{/emoji}}

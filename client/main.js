@@ -29,29 +29,35 @@ function timeSince(date) {
 
 function registerEvent(obj, self)
 {
-  for (var index = 0; index < 1; index++) {
+  for (var index = 0; index < obj.length; index++) {
     // console.log(obj[index].events_url);
     Meteor.call("eventQuery", obj[index].events_url, obj[index].etag, index, function(error, results) {
       if (error) {
         // console.log(error);
       } else {
-        console.log(results);
+        // console.log(results);
         if (obj[results.index].etag == null) {
           obj[results.index].etag = results.response.headers.etag;
+          console.log("ETag init.");
         } else if (results.response.statusCode == 304) {
-          console.log("Nothing to update");
+          console.log("Nothing to update.");
         }  else {
-          console.log("Must update");
+          console.log("Must update.");
           obj[results.index].etag = results.response.headers.etag;
-          launchQuery(self, "https://api.github.com/search/repositories?q=stars%3A%3E1+nodejs&sort=stars&order=desc&per_page=10&page=0");
+          Meteor.call("getQuery", "https://api.github.com/repositories/" + obj[results.index].id, function(error, result) {
+            if (error) {
+              console.log(error);
+            } else {
+              obj[results.index].stars = result.data.watchers_count;
+              obj[results.index].forks = result.data.forks_count;
+              self.repositories.set(obj);
+            }
+          });
         }
-        // console.log(obj[results.index].events_url);
       }
     });
 
   }
-  // console.log(obj);
-
 }
 
 
@@ -64,7 +70,7 @@ function launchQuery(self, query) {
     else {
       var data = [];
       if (results.data.incomplete_results) {
-        // self.repositories.set([{name: 'The Github API has timed out, reloading...'}]);
+        self.repositories.set([{name: 'The Github API has timed out, reloading...'}]);
         launchQuery(self, query);
       }
       else {
@@ -72,6 +78,8 @@ function launchQuery(self, query) {
           // console.log(results.data.items[index])
           var obj = {};
           for (var item in results.data.items[index]) {
+            if (item == 'id' && results.data.items[index].hasOwnProperty(item))
+            obj.id = results.data.items[index][item];
             if (item == 'name' && results.data.items[index].hasOwnProperty(item))
             obj.name = results.data.items[index][item];
             else if (item == 'html_url' && results.data.items[index].hasOwnProperty(item))
@@ -80,7 +88,7 @@ function launchQuery(self, query) {
             obj.created_at = timeSince(Date.parse(results.data.items[index][item]));
             else if (item == 'description' && results.data.items[index].hasOwnProperty(item))
             obj.description = results.data.items[index][item];
-            else if (item == 'stargazers_count' && results.data.items[index].hasOwnProperty(item))
+            else if (item == 'watchers_count' && results.data.items[index].hasOwnProperty(item))
             obj.stars = results.data.items[index][item];
             else if (item == 'forks_count' && results.data.items[index].hasOwnProperty(item))
             obj.forks = results.data.items[index][item];
