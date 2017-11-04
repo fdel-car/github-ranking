@@ -25,7 +25,11 @@
       <!-- <span class="badge badge-success badge-pill">{{stars}}</span> -->
       <span class="badge badge-light"><i class="fa fa-star" aria-hidden="true"></i> {{stars}}</span>
     </div>
-    <p class="mb-1">  {{description}}</p>
+    <p class="mb-1">
+      {{#emoji}}
+      {{description}}
+      {{/emoji}}
+    </p>
     <div class="d-flex w-100 justify-content-between align-items-center">
       <span class="badge badge-light"><i class="fa fa-code-fork" aria-hidden="true"></i> {{forks}}</span>
       <small>Created {{created_at}} ago</small>

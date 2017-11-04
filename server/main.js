@@ -2,6 +2,10 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http'
 import { check } from 'meteor/check'
 
+Meteor.publish('emojis', function() {
+  return Emojis.find();
+});
+
 if (Meteor.isServer) {
     Meteor.methods({
         getQuery: function (query) {
