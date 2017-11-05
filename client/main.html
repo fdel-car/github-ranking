@@ -1,40 +1,7 @@
 <head>
-  <title>Repository ranking</title>
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://use.fontawesome.com/77f1e7b12c.js"></script>
-  <link rel="icon" sizes="16x16 32x32" href="/favicon.ico">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <title>Repository ranking</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/77f1e7b12c.js"></script>
+    <link rel="icon" sizes="16x16 32x32" href="/favicon.ico">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 </head>
-
-<body>
-
-<div id="flex" class="container">
-    <div class="list-group w-100">
-      <h1 id="title">Repository ranking -> Node.js</h1>
-      {{#each repositories}}
-      {{> most_liked}}
-      {{/each}}
-    </div>
-</div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-</body>
-
-<template name="most_liked">
-  <a class="list-group-item" href="{{url}}" target="_blank">
-    <div class="d-flex w-100 justify-content-between align-items-center">
-      <h5 class="mb-1">{{name}}</h5>
-      <!-- <span class="badge badge-success badge-pill">{{stars}}</span> -->
-      <span class="badge badge-light"><i class="fa fa-star" aria-hidden="true"></i> {{stars}}</span>
-    </div>
-    <p class="mb-1 description">
-      {{#emoji}}
-      {{description}}
-      {{/emoji}}
-    </p>
-    <div class="d-flex w-100 justify-content-between align-items-center">
-      <span class="badge badge-light"><i class="fa fa-code-fork" aria-hidden="true"></i> {{forks}}</span>
-      <small>Created {{created_at}} ago</small>
-    </div>
-  </a>
-</template>

@@ -6,7 +6,7 @@
 html, body {
     font-family: 'Roboto', sans-serif;
     height: 100%!important;
-    background-image: url('/polygon_bg.jpg');
+    background-image: url('/bg.jpg');
     background-repeat: no-repeat;
     background-position-x: center;
 }
