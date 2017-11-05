@@ -11,9 +11,8 @@
                 <a class="dropdown-item" href="#">Symfony</a>
             </div>
         </div>
-
         {{#each repositories}}
-        {{> most_liked}}
+            {{> most_liked}}
         {{/each}}
     </div>
 </div>
@@ -25,7 +24,6 @@
     <a class="list-group-item" href="{{url}}" target="_blank">
         <div class="d-flex w-100 justify-content-between align-items-center">
             <h5 class="mb-1">{{name}}</h5>
-            <!-- <span class="badge badge-success badge-pill">{{stars}}</span> -->
             <span class="badge badge-light"><i class="fa fa-star" aria-hidden="true"></i> {{stars}}</span>
         </div>
         <p class="mb-1 description">

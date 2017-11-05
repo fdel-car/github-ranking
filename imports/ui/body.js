@@ -29,20 +29,18 @@ function timeSince(date) {
   return Math.floor(seconds) + " seconds";
 }
 
-function registerEvent(obj, self)
+function registerEvent(obj)
 {
   for (var index = 0; index < obj.length; index++) {
-    // console.log(obj[index].events_url);
     Meteor.call("eventQuery", obj[index].events_url, obj[index].etag, index, function(error, results) {
       if (error) {
-        // console.log(error);
+        console.log(error);
       } else {
-        // console.log(results);
         if (obj[results.index].etag == null) {
           obj[results.index].etag = results.response.headers.etag;
-          // console.log("ETag init.");
+          // ETag init.
         } else if (results.response.statusCode == 304) {
-          // console.log("Nothing to update.");
+          // Nothing to update.
         }  else {
           console.log("Must update " + obj[results.index].name + ', ' + results.response.data[0].type + ".");
           obj[results.index].etag = results.response.headers.etag;
@@ -50,9 +48,12 @@ function registerEvent(obj, self)
             if (error) {
               console.log(error);
             } else {
+              obj[results.index].name = result.data.name;
+              obj[results.index].created_at = timeSince(Date.parse(result.data.created_at));
+              obj[results.index].description = result.data.description;
               obj[results.index].stars = result.data.watchers_count;
               obj[results.index].forks = result.data.forks_count;
-              self.repositories.set(obj);
+              Session.set('repositories', obj);
             }
           });
         }
@@ -63,17 +64,17 @@ function registerEvent(obj, self)
 }
 
 
-function launchQuery(self, query) {
+function launchQuery(query) {
   Meteor.call("getQuery", query, function(error, results) {
     if (error) {
       if (error != null && error != false)
-      self.repositories.set([{name: error.reason, created_at: 'few seconds', description: 'If only MongoDB was used... nah don\'t need it.', stars: 'Stars', forks: 'Forks'}]);
+      Session.set('repositories', [{name: error.reason, created_at: 'few seconds', description: 'Sorry !', stars: 'Stars', forks: 'Forks'}]);
     }
     else {
       var data = [];
       if (results.data.incomplete_results) {
-        // self.repositories.set([{name: 'The Github API has timed out, reloading...'}]);
-        launchQuery(self, query);
+        console.log("The Github API has timed out, reloading...");
+        launchQuery(query);
       }
       else {
         for (var index = 0; index < results.data.items.length; index++) {
@@ -100,31 +101,29 @@ function launchQuery(self, query) {
           obj.etag = null;
           data.push(obj);
         }
-        self.repositories.set(data);
-        registerEvent(data, self);
+        Session.set('repositories', data);
+        registerEvent(data);
         if (interval != null) {
           clearInterval(interval);
           interval = null;
         }
-        interval = setInterval(function() {registerEvent(data, self);}, 7200);
+        interval = setInterval(function() {registerEvent(data);}, 7200);
       }
     }
   });
 }
 
 Template.body.onCreated(function bodyOnCreated(){
-  var self = this;
-  self.repositories = new ReactiveVar([{ name: 'Waiting for the server response...', created_at: 'few seconds', description: 'Should be here any seconds now !', stars: 'Stars', forks: 'Forks'}]);
+  Session.setDefault('repositories', [{ name: 'Waiting for the server response...', created_at: 'few seconds', description: 'Should be here any seconds now !', stars: 'Stars', forks: 'Forks'}]);
   Session.setDefault('tag_repositories', "Node.js");
   if (Meteor.isClient) {
-    launchQuery(self, "https://api.github.com/search/repositories?q=stars%3A%3E1+" + Session.get('tag_repositories').toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=0");
+    launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + Session.get('tag_repositories').toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=0");
   }
 });
 
 Template.body.helpers({
   repositories: function () {
-    // console.log(Template.instance().repositories.get());
-    return Template.instance().repositories.get();
+    return Session.get('repositories');
   },
   tag_repositories: function () {
     return Session.get('tag_repositories');
@@ -139,9 +138,7 @@ if (Meteor.isClient) {
         clearInterval(interval);
         interval = null;
       }
-      var self = Template.instance();
-      // console.log(event.target.text.toLowerCase().replace(/\.js$/, "js"));
-      launchQuery(self, "https://api.github.com/search/repositories?q=stars%3A%3E1+" + event.target.text.toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=0");
+      launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + event.target.text.toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=0");
       Session.set('tag_repositories', event.target.text);
     }
   });
