@@ -11,10 +11,23 @@ html, body {
     background-position-x: center;
 }
 
-#title {
+#tag::after {
+    display: none;
+}
+
+#tag:hover {
+    text-decoration: none;
+}
+
+#tag {
     font-family: 'Patrick Hand SC', cursive;
     color: white!important;
     text-shadow: -1.25px 0 black, 0 1.25px black, 1.25px 0 black, 0 -1.25px black;
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.dropdown {
     text-align: center;
     padding-bottom: 2rem;
 }
