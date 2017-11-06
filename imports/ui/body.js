@@ -44,7 +44,7 @@ function registerEvent(obj)
         }  else {
           console.log("Must update " + obj[results.index].name + ', ' + results.response.data[0].type + ".");
           obj[results.index].etag = results.response.headers.etag;
-          Meteor.call("getQuery", "https://api.github.com/repositories/" + obj[results.index].id, function(error, result) {
+          Meteor.call("getQuery", "https://api.github.com/repositories/" + obj[results.index].id + '?', function(error, result) {
             if (error) {
               console.log(error);
             } else {
@@ -124,7 +124,7 @@ Template.body.onCreated(function bodyOnCreated(){
   }
   Session.setDefault('search_pages', search_pages);
   if (Meteor.isClient) {
-    launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + Session.get('tag_repositories').toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=" + Session.get('search_pages')[0].current_index);
+    launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + Session.get('tag_repositories').toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=" + Session.get('search_pages')[0].current_index + '&');
   }
 });
 
@@ -157,7 +157,7 @@ if (Meteor.isClient) {
         clearInterval(interval);
         interval = null;
       }
-      launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + event.target.text.toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=" + Session.get('search_pages')[0].current_index);
+      launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + event.target.text.toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=" + Session.get('search_pages')[0].current_index + '&');
       Session.set('tag_repositories', event.target.text);
     },
     'click .page-link': function (event) {
@@ -186,7 +186,7 @@ if (Meteor.isClient) {
         clearInterval(interval);
         interval = null;
       }
-      launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + Session.get('tag_repositories').toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=" + data[0].current_index);
+      launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + Session.get('tag_repositories').toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=" + data[0].current_index + '&');
       Session.set('search_pages', data);
     }
   });
