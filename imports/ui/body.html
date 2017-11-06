@@ -1,23 +1,30 @@
 <body>
     <div id="flex" class="container">
         <div class="list-group w-100">
-        <div class="dropdown show">
-            <a class="dropdown-toggle" href="#" role="button" id="tag" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{tag_repositories}} <i style="vertical-align: middle;" class="fa fa-caret-down" aria-hidden="true"></i>
-            </a>
-            <div class="dropdown-menu" aria-labelledby="tag">
-                <a class="dropdown-item" href="#">Node.js</a>
-                <a class="dropdown-item" href="#">Angular.js</a>
-                <a class="dropdown-item" href="#">Symfony</a>
+            <div class="dropdown show">
+                <a class="dropdown-toggle" href="#" role="button" id="tag" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{tag_repositories}} <i style="vertical-align: middle;" class="fa fa-caret-down" aria-hidden="true"></i>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="tag">
+                    <a class="dropdown-item" href="#">Node.js</a>
+                    <a class="dropdown-item" href="#">Angular.js</a>
+                    <a class="dropdown-item" href="#">Symfony</a>
+                </div>
             </div>
-        </div>
-        {{#each repositories}}
+            {{#each repositories}}
             {{> most_liked}}
-        {{/each}}
+            {{/each}}
+            <nav style="padding-top: 4px;" aria-label="search-page-index">
+                <ul class="pagination justify-content-end">
+                    {{#each search_pages}}
+                    {{> search_index}}
+                    {{/each}}
+                </ul>
+            </nav>
+        </div>
     </div>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 </body>
 
 <template name="most_liked">
@@ -36,4 +43,14 @@
             <small>Created {{created_at}} ago</small>
         </div>
     </a>
+</template>
+
+<template name="search_index">
+    {{#if equals index 1}}
+    <li class="page-item {{#if equals current_index 1}}disabled{{/if}}"><a class="page-link" href="#" tabindex="-1">Previous</a></li>
+    {{/if}}
+    <li class="page-item {{#if equals index current_index}}disabled{{/if}}"><a class="page-link" href="#">{{index}}</a></li>
+    {{#if last_index index}}
+    <li class="page-item {{#if last_index current_index}}disabled{{/if}}"><a class="page-link" href="#">Next</a></li>
+    {{/if}}
 </template>

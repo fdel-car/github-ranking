@@ -78,7 +78,6 @@ function launchQuery(query) {
       }
       else {
         for (var index = 0; index < results.data.items.length; index++) {
-          // console.log(results.data.items[index])
           var obj = {};
           for (var item in results.data.items[index]) {
             if (item == 'id' && results.data.items[index].hasOwnProperty(item))
@@ -107,7 +106,7 @@ function launchQuery(query) {
           clearInterval(interval);
           interval = null;
         }
-        interval = setInterval(function() {registerEvent(data);}, 7200);
+        interval = setInterval(function() {registerEvent(data);}, /*7200*/8000);
       }
     }
   });
@@ -116,9 +115,26 @@ function launchQuery(query) {
 Template.body.onCreated(function bodyOnCreated(){
   Session.setDefault('repositories', [{ name: 'Waiting for the server response...', created_at: 'few seconds', description: 'Should be here any seconds now !', stars: 'Stars', forks: 'Forks'}]);
   Session.setDefault('tag_repositories', "Node.js");
-  if (Meteor.isClient) {
-    launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + Session.get('tag_repositories').toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=0");
+  var search_pages = [];
+  for (var index = 0; index < 5; index++) {
+    var obj = {};
+    obj.index = index + 1;
+    obj.current_index = 1;
+    search_pages.push(obj);
   }
+  Session.setDefault('search_pages', search_pages);
+  if (Meteor.isClient) {
+    launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + Session.get('tag_repositories').toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=" + Session.get('search_pages')[0].current_index);
+  }
+});
+
+Template.registerHelper('equals', function (a, b) {
+  return a === b;
+});
+
+Template.registerHelper('last_index', function (a) {
+  var l = Session.get('search_pages').length;
+  return a === l;
 });
 
 Template.body.helpers({
@@ -127,6 +143,9 @@ Template.body.helpers({
   },
   tag_repositories: function () {
     return Session.get('tag_repositories');
+  },
+  search_pages: function () {
+    return Session.get('search_pages');
   }
 });
 
@@ -138,8 +157,37 @@ if (Meteor.isClient) {
         clearInterval(interval);
         interval = null;
       }
-      launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + event.target.text.toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=0");
+      launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + event.target.text.toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=" + Session.get('search_pages')[0].current_index);
       Session.set('tag_repositories', event.target.text);
+    },
+    'click .page-link': function (event) {
+      event.preventDefault();
+      var data = Session.get('search_pages');
+      var target;
+      if (event.target.text == 'Next') {
+        target = data[0].current_index + 1;
+        if (target > data.length)
+          target = data.length;
+      } else if (event.target.text == 'Previous') {
+        target = data[0].current_index - 1;
+        if (target < 1)
+          target = 1;
+      } else {
+        target = parseInt(event.target.text);
+        if (target < 1)
+          target = 1;
+        if (target > data.length)
+          target = data.length;
+      }
+      for (var index = 0; index < data.length; index++) {
+        data[index].current_index = target;
+      }
+      if (interval != null) {
+        clearInterval(interval);
+        interval = null;
+      }
+      launchQuery("https://api.github.com/search/repositories?q=stars%3A%3E1+" + Session.get('tag_repositories').toLowerCase().replace(/\.js$/, "js") + "&sort=stars&order=desc&per_page=10&page=" + data[0].current_index);
+      Session.set('search_pages', data);
     }
   });
 }

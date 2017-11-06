@@ -12,7 +12,7 @@ if (Meteor.isServer) {
             check(query, String);
             this.unblock();
             try {
-                return HTTP.call("GET", query + '?client_id=2df6abf2faef111e45b8&client_secret=f98521b3f893111e387c2844b54c8043b92b9ced', {'headers': {'User-Agent': 'app-test'}});
+                return HTTP.call("GET", query + '&client_id=2df6abf2faef111e45b8&client_secret=f98521b3f893111e387c2844b54c8043b92b9ced', {'headers': {'User-Agent': 'app-test'}});
             } catch (error) {
                 if (error.response.statusCode == 403) {
                     throw new Meteor.Error("rate-limit exceeded", "There's been too many call made to the Github API, please wait just a minute before reloading.");

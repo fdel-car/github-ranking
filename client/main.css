@@ -11,12 +11,17 @@ html, body {
     background-position-x: center;
 }
 
+.page-link:focus {
+    background-color: white!important;
+}
+
 #tag::after {
     display: none;
 }
 
 #tag:hover {
     text-decoration: none;
+    color: whitesmoke!important;
 }
 
 #tag {
