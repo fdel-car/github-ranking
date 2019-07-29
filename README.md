@@ -1,4 +1,4 @@
-# github-ranking
+# Github-ranking
 
 Little web application which rank by stars all github repositories related to the tag on top of the page.
 
@@ -13,4 +13,4 @@ Then go to the cloned repository and run the app.
 meteor
 ```
 
-Go to http://localhost:3000/ and here you are !
+Go to http://localhost:3000/ and here you are!
