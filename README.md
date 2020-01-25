@@ -1,4 +1,4 @@
-# GitHub-ranking
+# GitHub ranking
 
 Little web application which rank by stars all github repositories related to the tag on top of the page.
 
